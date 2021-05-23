@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hy_flutter_simple/widget/base_stateless_widget.dart';
 
+
 class ClipImageWidget extends BaseStatelessWidget {
 
   @override
@@ -9,7 +10,7 @@ class ClipImageWidget extends BaseStatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       width: double.infinity,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
