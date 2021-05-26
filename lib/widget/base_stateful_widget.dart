@@ -7,6 +7,9 @@ abstract class BaseStatefulWidget extends StatefulWidget {
 
 abstract class BaseStatefulState<T extends BaseStatefulWidget>
     extends State<T> {
+
+
+
   @override
   Widget build(BuildContext context) {
     final title =
@@ -18,4 +21,5 @@ abstract class BaseStatefulState<T extends BaseStatefulWidget>
   }
 
   Widget buildWidget(BuildContext context);
+
 }
