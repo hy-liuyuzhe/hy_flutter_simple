@@ -9,4 +9,5 @@ Map<String, WidgetBuilder> routers = {
   "列表滑动到指定位置": (_) => ScrollToIndexWidget(),
   "控件动画组合展示（旋转加放大圆）": (_) => AnimationComposeWidget(),
   "探索InheritedLifeCycle": (_) => InheritedLifeCycleWidget(),
+  "气泡提示框": (_) => BubbleSimpleWidget(),
 };

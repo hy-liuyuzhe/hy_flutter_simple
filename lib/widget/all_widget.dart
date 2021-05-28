@@ -6,3 +6,4 @@ export 'animation_compose_widget.dart';
 export 'inherited_lifecycle_widget.dart';
 export 'refresh_simple1_widget.dart';
 export 'refresh_simple2_widget.dart';
+export 'bubble_simple_widget.dart';
