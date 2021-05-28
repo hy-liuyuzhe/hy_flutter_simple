@@ -5,6 +5,11 @@ import 'package:hy_flutter_simple/widget/base_stateful_widget.dart';
 
 /// 气泡指示器
 /// TextButton.icon 当里面的文字越界了，无法使用expand包裹来解决；只能拆开单独使用text
+///
+/// 箭头top默认show时x，y定位到箭头的尖尖的头部
+/// 箭头bottom默认show时x，y定位到箭头的尖尖的对面
+/// 箭头left默认show时x，y定位到箭头的尖尖的对面
+/// 箭头right默认show时x，y定位到箭头的尖尖的对面
 class BubbleSimpleWidget extends BaseStatefulWidget {
   @override
   State<BaseStatefulWidget> createState() => BubbleSimpleState();
@@ -14,6 +19,8 @@ class BubbleSimpleState extends BaseStatefulState {
   GlobalKey blueKey = GlobalKey();
   GlobalKey redKey = GlobalKey();
   GlobalKey greenKey = GlobalKey();
+  GlobalKey yellowKey = GlobalKey();
+  GlobalKey purpleKey = GlobalKey();
 
   @override
   Widget buildWidget(BuildContext context) {
@@ -22,7 +29,13 @@ class BubbleSimpleState extends BaseStatefulState {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(
-        children: [blueButton(context), greenButton(context), redButton()],
+        children: [
+          blueButton(context),
+          greenButton(context),
+          redButton(),
+          yellowButton(),
+          purpleButton(),
+        ],
       ),
     );
   }
@@ -34,7 +47,8 @@ class BubbleSimpleState extends BaseStatefulState {
           key: greenKey,
           color: Colors.green,
           child: TextButton(
-            child: Text("simple2"),
+            child:
+                Text("simple2", style: Theme.of(context).textTheme.bodyText2),
             onPressed: () {
               showDialog(
                   context: context,
@@ -72,7 +86,8 @@ class BubbleSimpleState extends BaseStatefulState {
                       (getX(blueKey) + size.width / 2).toDouble(),
                       (getY(blueKey) + size.height - getStatusBarHeight())
                           .toDouble(),
-                      text: "simple1"));
+                      text: "simple1",
+                      arrowLocation: ArrowLocation.TOP));
                 });
           }),
     );
@@ -103,13 +118,81 @@ class BubbleSimpleState extends BaseStatefulState {
                           .size;
 
                       return BubbleDialog(BubbleBuilder(
-                          (getX(redKey) + size.width / 2).toDouble(),
-                          (getY(redKey) -
-                                  BubbleBuilder.BUBBLE_HEIGHT -
-                                  getStatusBarHeight())
-                              .toDouble(),
+                          getX(redKey) + size.width / 2,
+                          getY(redKey) -
+                              BubbleBuilder.BUBBLE_HEIGHT -
+                              getStatusBarHeight(),
                           text: "simple2",
                           arrowLocation: ArrowLocation.BOTTOM));
+                    });
+              },
+            )));
+  }
+
+  yellowButton() {
+    var screen = MediaQuery.of(context).size;
+    return Positioned(
+        right: 0,
+        bottom: (screen.height -
+                kToolbarHeight -
+                MediaQuery.of(context).padding.top) /
+            2,
+        child: Container(
+            key: yellowKey,
+            color: Colors.yellow,
+            width: Theme.of(context).buttonTheme.minWidth,
+            height: Theme.of(context).buttonTheme.height,
+            child: TextButton(
+              child: Text("simple4"),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      var size = (yellowKey.currentContext!.findRenderObject()
+                              as RenderBox)
+                          .size;
+
+                      return BubbleDialog(BubbleBuilder(
+                          getX(yellowKey) - BubbleBuilder.BUBBLE_WIDTH,
+                          getY(yellowKey) +
+                              size.height / 2 -
+                              getStatusBarHeight(),
+                          text: "simple4",
+                          arrowLocation: ArrowLocation.RIGHT));
+                    });
+              },
+            )));
+  }
+
+  purpleButton() {
+    var screen = MediaQuery.of(context).size;
+    return Positioned(
+        left: 0,
+        bottom: (screen.height) / 2,
+        child: Container(
+            key: purpleKey,
+            color: Colors.purple,
+            width: Theme.of(context).buttonTheme.minWidth,
+            height: Theme.of(context).buttonTheme.height,
+            child: TextButton(
+              child: Text("simple5"),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      var size = (purpleKey.currentContext!.findRenderObject()
+                              as RenderBox)
+                          .size;
+
+                      return BubbleDialog(BubbleBuilder(
+                          getX(purpleKey) +
+                              // BubbleBuilder.BUBBLE_WIDTH +
+                              size.width,
+                          getY(purpleKey) +
+                              size.height / 2 -
+                              getStatusBarHeight(),
+                          text: "simple5",
+                          arrowLocation: ArrowLocation.LEFT));
                     });
               },
             )));
@@ -143,10 +226,14 @@ class BubbleDialog extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     var x = builder.x;
+    var y = builder.y;
     if (top_b()) {
       x = builder.x - builder.bubbleWidth / 2;
+    } else if (left_r()) {
+      y = builder.y - builder.bubbleHeight / 2;
     }
 
+    //只有当 (x + builder.bubbleWidth) <= size.width，才可以显示完整指示器在屏幕内
     if (x < 0) {
       //目标靠左边屏幕
       x = 0;
@@ -155,13 +242,27 @@ class BubbleDialog extends StatelessWidget {
       x = size.width - builder.bubbleWidth;
     }
 
-    builder.arrowPosition = calculateArrowPosition(x);
+    if (y < 0) {
+      //目标靠上面屏幕
+      y = 0;
+    } else if ((y + builder.bubbleHeight) > size.height) {
+      //目标过于靠下边
+      y = size.height - builder.bubbleHeight;
+    }
+
+    builder.arrowPosition = calculateArrowPosition(x, y);
 
     var margin = EdgeInsets.zero;
     if (builder.arrowLocation == ArrowLocation.TOP) {
-      margin = EdgeInsets.only(top: builder.arrowHeight, left: 5, right: 5);
+      margin = EdgeInsets.only(top: builder.arrowHeight);
     } else if (builder.arrowLocation == ArrowLocation.BOTTOM) {
-      margin = EdgeInsets.only(left: 5, right: 5, bottom: builder.arrowHeight);
+      margin = EdgeInsets.only(bottom: builder.arrowHeight);
+    } else if (builder.arrowLocation == ArrowLocation.LEFT) {
+      print("left");
+      margin = EdgeInsets.only(left: builder.arrowHeight);
+    } else if (builder.arrowLocation == ArrowLocation.RIGHT) {
+      print("right");
+      margin = EdgeInsets.only(right: builder.arrowHeight);
     }
 
     return Scaffold(
@@ -181,7 +282,7 @@ class BubbleDialog extends StatelessWidget {
               ),
               Center(
                 child: Container(
-                  color: Colors.green.shade50,
+                  color: Colors.transparent,
                   margin: margin,
                   width: builder.bubbleWidth,
                   height: builder.bubbleHeight,
@@ -208,7 +309,7 @@ class BubbleDialog extends StatelessWidget {
             ],
           ),
           // color: Colors.purple,
-          margin: EdgeInsets.only(left: x, top: builder.y),
+          margin: EdgeInsets.only(left: x, top: y),
         ),
       ),
     );
@@ -219,11 +320,18 @@ class BubbleDialog extends StatelessWidget {
         builder.arrowLocation == ArrowLocation.BOTTOM;
   }
 
+  bool left_r() {
+    return builder.arrowLocation == ArrowLocation.LEFT ||
+        builder.arrowLocation == ArrowLocation.RIGHT;
+  }
+
   /// position求的是箭头左顶点x相对于气泡left的距离)
-  double calculateArrowPosition(double x) {
+  double calculateArrowPosition(double x, double y) {
     double result = 0;
     if (top_b()) {
       result = builder.x - x - builder.arrowWidth / 2;
+    } else if (left_r()) {
+      result = builder.y - y - builder.arrowHeight / 2;
     }
 
     print("result= $result");
@@ -259,6 +367,12 @@ class BubblePainter extends CustomPainter {
       case ArrowLocation.BOTTOM:
         setUpBottomPath(mRect!);
         break;
+      case ArrowLocation.LEFT:
+        setUpLeftPath(mRect!);
+        break;
+      case ArrowLocation.RIGHT:
+        setUpRightPath(mRect!);
+        break;
     }
 
     canvas.drawPath(path, mPaint);
@@ -289,6 +403,40 @@ class BubblePainter extends CustomPainter {
 
     path.addRRect(RRect.fromLTRBR(rect.left, rect.top, rect.right,
         rect.bottom - builder.arrowHeight, Radius.circular(builder.radius)));
+    path.close();
+  }
+
+  void setUpLeftPath(Rect rect) {
+    var arrowPosition = builder.arrowPosition;
+    path.moveTo(rect.left + builder.arrowWidth,
+        rect.top + arrowPosition);
+
+    // path.lineTo(rect.left + builder.arrowWidth,
+    //     rect.top + arrowPosition + builder.arrowHeight / 2);
+
+    path.lineTo(rect.left, rect.top + arrowPosition + builder.arrowHeight/2);
+
+    path.lineTo(rect.left + builder.arrowWidth,
+        rect.top + arrowPosition + builder.arrowHeight);
+
+    path.addRRect(RRect.fromLTRBR(rect.left + builder.arrowHeight, rect.top,
+        rect.right, rect.bottom, Radius.circular(builder.radius)));
+    path.close();
+  }
+
+  void setUpRightPath(Rect rect) {
+    var arrowPosition = builder.arrowPosition;
+    path.moveTo(rect.right - builder.arrowWidth, rect.top + arrowPosition);
+    path.lineTo(rect.right, rect.top + arrowPosition + builder.arrowHeight / 2);
+    path.lineTo(rect.right - builder.arrowWidth,
+        rect.top + arrowPosition + builder.arrowHeight);
+
+    path.addRRect(RRect.fromLTRBR(
+        rect.left,
+        rect.top,
+        rect.right - builder.arrowHeight,
+        rect.bottom,
+        Radius.circular(builder.radius)));
     path.close();
   }
 }
@@ -329,6 +477,3 @@ enum ArrowLocation {
   TOP,
   BOTTOM,
 }
-
-/// 被点击的目标偏离左边还是右边或是正好
-enum WidgetLocation { left, center, right }
