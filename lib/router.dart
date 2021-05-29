@@ -10,4 +10,5 @@ Map<String, WidgetBuilder> routers = {
   "控件动画组合展示（旋转加放大圆）": (_) => AnimationComposeWidget(),
   "探索InheritedLifeCycle": (_) => InheritedLifeCycleWidget(),
   "气泡提示框": (_) => BubbleSimpleWidget(),
+  "外国友人的例子": (_) => PipeLineWidget(),
 };

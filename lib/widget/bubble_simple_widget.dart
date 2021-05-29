@@ -135,7 +135,9 @@ class BubbleSimpleState extends BaseStatefulState {
         right: 0,
         bottom: (screen.height -
                 kToolbarHeight -
-                MediaQuery.of(context).padding.top) /
+                MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+                    .padding
+                    .top) /
             2,
         child: Container(
             key: yellowKey,
@@ -216,126 +218,134 @@ double getStatusBarHeight() {
   return MediaQueryData.fromWindow(WidgetsBinding.instance!.window).padding.top;
 }
 
-class BubbleDialog extends StatelessWidget {
+class BubbleDialog extends StatefulWidget {
   final BubbleBuilder builder;
 
   BubbleDialog(this.builder);
 
   @override
+  _BubbleDialogState createState() => _BubbleDialogState();
+}
+
+class _BubbleDialogState extends State<BubbleDialog> {
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    var x = builder.x;
-    var y = builder.y;
+    var x = widget.builder.x;
+    var y = widget.builder.y;
     if (top_b()) {
-      x = builder.x - builder.bubbleWidth / 2;
+      x = widget.builder.x - widget.builder.bubbleWidth / 2;
     } else if (left_r()) {
-      y = builder.y - builder.bubbleHeight / 2;
+      y = widget.builder.y - widget.builder.bubbleHeight / 2;
     }
 
     //只有当 (x + builder.bubbleWidth) <= size.width，才可以显示完整指示器在屏幕内
     if (x < 0) {
       //目标靠左边屏幕
       x = 0;
-    } else if ((x + builder.bubbleWidth) > size.width) {
+    } else if ((x + widget.builder.bubbleWidth) > size.width) {
       //目标过于靠右边
-      x = size.width - builder.bubbleWidth;
+      x = size.width - widget.builder.bubbleWidth;
     }
 
     if (y < 0) {
       //目标靠上面屏幕
       y = 0;
-    } else if ((y + builder.bubbleHeight) > size.height) {
+    } else if ((y + widget.builder.bubbleHeight) > size.height) {
       //目标过于靠下边
-      y = size.height - builder.bubbleHeight;
+      y = size.height - widget.builder.bubbleHeight;
     }
 
-    builder.arrowPosition = calculateArrowPosition(x, y);
+    widget.builder.arrowPosition = calculateArrowPosition(x, y);
 
     var margin = EdgeInsets.zero;
-    if (builder.arrowLocation == ArrowLocation.TOP) {
-      margin = EdgeInsets.only(top: builder.arrowHeight);
-    } else if (builder.arrowLocation == ArrowLocation.BOTTOM) {
-      margin = EdgeInsets.only(bottom: builder.arrowHeight);
-    } else if (builder.arrowLocation == ArrowLocation.LEFT) {
-      print("left");
-      margin = EdgeInsets.only(left: builder.arrowHeight);
-    } else if (builder.arrowLocation == ArrowLocation.RIGHT) {
-      print("right");
-      margin = EdgeInsets.only(right: builder.arrowHeight);
+    if (widget.builder.arrowLocation == ArrowLocation.TOP) {
+      margin = EdgeInsets.only(top: widget.builder.arrowHeight);
+    } else if (widget.builder.arrowLocation == ArrowLocation.BOTTOM) {
+      margin = EdgeInsets.only(bottom: widget.builder.arrowHeight);
+    } else if (widget.builder.arrowLocation == ArrowLocation.LEFT) {
+      margin = EdgeInsets.only(left: widget.builder.arrowHeight);
+    } else if (widget.builder.arrowLocation == ArrowLocation.RIGHT) {
+      margin = EdgeInsets.only(right: widget.builder.arrowHeight);
     }
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
+      body: InkWell(
         onTap: () => Navigator.of(context).pop(),
         child: Container(
-          alignment: Alignment.centerLeft,
-          width: builder.bubbleWidth,
-          height: builder.bubbleHeight,
-          child: Stack(
-            children: [
-              CustomPaint(
-                size: Size(builder.bubbleWidth, builder.bubbleHeight),
-                painter: BubblePainter(builder),
-              ),
-              Center(
-                child: Container(
-                  color: Colors.transparent,
-                  margin: margin,
-                  width: builder.bubbleWidth,
-                  height: builder.bubbleHeight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.send),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Flexible(
-                        child: Text(
-                          builder.text.toString(),
-                          style: TextStyle(color: Colors.black),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )
-                    ],
-                  ),
+          width: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+              .size
+              .width,
+          height: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+              .size
+              .height,
+          child: Container(
+            child: Stack(
+              children: [
+                CustomPaint(
+                  size: Size(
+                      widget.builder.bubbleWidth, widget.builder.bubbleHeight),
+                  painter: BubblePainter(widget.builder),
                 ),
-              )
-            ],
+                Container(
+                  width: widget.builder.bubbleWidth,
+                  height: widget.builder.bubbleHeight,
+                  child: Container(
+                    color: Colors.white,
+                    margin: margin,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.send),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Flexible(
+                          child: Text(
+                            widget.builder.text.toString(),
+                            style: TextStyle(color: Colors.black),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+            // color: Colors.purple,
+            margin: EdgeInsets.only(left: x, top: y),
           ),
-          // color: Colors.purple,
-          margin: EdgeInsets.only(left: x, top: y),
         ),
       ),
     );
   }
 
   bool top_b() {
-    return builder.arrowLocation == ArrowLocation.TOP ||
-        builder.arrowLocation == ArrowLocation.BOTTOM;
+    return widget.builder.arrowLocation == ArrowLocation.TOP ||
+        widget.builder.arrowLocation == ArrowLocation.BOTTOM;
   }
 
   bool left_r() {
-    return builder.arrowLocation == ArrowLocation.LEFT ||
-        builder.arrowLocation == ArrowLocation.RIGHT;
+    return widget.builder.arrowLocation == ArrowLocation.LEFT ||
+        widget.builder.arrowLocation == ArrowLocation.RIGHT;
   }
 
   /// position求的是箭头左顶点x相对于气泡left的距离)
   double calculateArrowPosition(double x, double y) {
     double result = 0;
     if (top_b()) {
-      result = builder.x - x - builder.arrowWidth / 2;
+      result = widget.builder.x - x - widget.builder.arrowWidth / 2;
     } else if (left_r()) {
-      result = builder.y - y - builder.arrowHeight / 2;
+      result = widget.builder.y - y - widget.builder.arrowHeight / 2;
     }
 
     print("result= $result");
-    print("builder= " + builder.toString());
+    print("builder= " + widget.builder.toString());
 
     return result;
   }
@@ -344,7 +354,7 @@ class BubbleDialog extends StatelessWidget {
 class BubblePainter extends CustomPainter {
   Rect? mRect;
   final path = Path();
-  final mPaint = Paint()..color = Colors.pink;
+  final mPaint = Paint()..color = Colors.white;
   final BubbleBuilder builder;
 
   BubblePainter(this.builder);
@@ -408,13 +418,9 @@ class BubblePainter extends CustomPainter {
 
   void setUpLeftPath(Rect rect) {
     var arrowPosition = builder.arrowPosition;
-    path.moveTo(rect.left + builder.arrowWidth,
-        rect.top + arrowPosition);
+    path.moveTo(rect.left + builder.arrowWidth, rect.top + arrowPosition);
 
-    // path.lineTo(rect.left + builder.arrowWidth,
-    //     rect.top + arrowPosition + builder.arrowHeight / 2);
-
-    path.lineTo(rect.left, rect.top + arrowPosition + builder.arrowHeight/2);
+    path.lineTo(rect.left, rect.top + arrowPosition + builder.arrowHeight / 2);
 
     path.lineTo(rect.left + builder.arrowWidth,
         rect.top + arrowPosition + builder.arrowHeight);
