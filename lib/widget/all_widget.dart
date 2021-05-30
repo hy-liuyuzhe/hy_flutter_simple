@@ -9,3 +9,4 @@ export 'refresh_simple2_widget.dart';
 export 'bubble_simple_widget.dart';
 export 'pipe_line_widget.dart';
 export 'object_key_widget.dart';
+export 'animate_text_widget.dart';

@@ -12,4 +12,5 @@ Map<String, WidgetBuilder> routers = {
   "气泡提示框": (_) => BubbleSimpleWidget(),
   "外国友人的例子": (_) => PipeLineWidget(),
   "tab切换界面和key的学习": (_) => ObjectKeyWidget(),
+  "炫酷的动画字体": (_) => AnimateTextWidget(),
 };
