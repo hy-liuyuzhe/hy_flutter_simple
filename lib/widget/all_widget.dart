@@ -10,3 +10,4 @@ export 'bubble_simple_widget.dart';
 export 'pipe_line_widget.dart';
 export 'object_key_widget.dart';
 export 'animate_text_widget.dart';
+export 'flutter_touch_event_widget.dart';

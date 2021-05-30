@@ -25,6 +25,20 @@ class AnimationComposeState extends BaseStatefulState
       });
 
     controller.repeat();
+
+    // reverse_forward();
+  }
+
+  ///无限循环， 正向和反向动画
+  void reverse_forward() {
+    controller.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        controller.reverse();
+      }else if(status == AnimationStatus.dismissed){
+        controller.forward();
+      }
+    });
+    controller.forward();
   }
 
   @override
