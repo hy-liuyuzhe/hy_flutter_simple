@@ -38,12 +38,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Text("收藏控件: ${routers.length} 个"),
-          ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return buildListItem(context, index);
-              },
-              itemCount: routers.length)
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return buildListItem(context, index);
+                },
+                itemCount: routers.length),
+          )
         ],
       ),
     );
