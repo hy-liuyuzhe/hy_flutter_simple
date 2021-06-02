@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hy_flutter_simple/widget/base_stateful_widget.dart';
 
+/// RefreshIndicator: 下拉刷新，包裹子view show来实现
+/// CircularProgressIndicator：加载更多，当滑动到最后一个item时，返回此view
 class RefreshSimple1Widget extends BaseStatefulWidget {
   @override
   _RefreshSimple1WidgetState createState() => _RefreshSimple1WidgetState();
@@ -39,7 +41,7 @@ class _RefreshSimple1WidgetState extends BaseStatefulState {
   Future<void> onLoadMore() async {
     await Future.delayed(Duration(seconds: 2));
     if (!mounted) return;
-    dataList.addAll(List.generate(pageSize, (index) => "loadmore"));
+    dataList.addAll(List.generate(pageSize, (index) => "load more"));
     setState(() {});
   }
 

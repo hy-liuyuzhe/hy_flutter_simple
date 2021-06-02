@@ -4,7 +4,7 @@ import 'package:hy_flutter_simple/widget/base_stateless_widget.dart';
 ///
 /// text不设置style 会使用 defaultStyle， 他是常量对象， 所以全局生效
 ///
-/// 显示关于APP信息
+/// showAboutDialog 显示关于APP信息, 对showDialog的一个封装
 /// AboutListTile
 ///   使用ListTitle构建的文本，点击弹showAboutDialog
 /// showAboutDialog->AboutDialog->AlertDialog->Dialog
