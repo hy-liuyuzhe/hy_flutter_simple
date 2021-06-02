@@ -4,6 +4,7 @@ import 'package:hy_flutter_simple/widget/all_widget.dart';
 Map<String, WidgetBuilder> routers = {
   "关于dialog": (_) => AboutListTileWidget(),
   "探索事件处理": (_) => FlutterTouchEventWidget(),
+  "富文本": (_) => RichTextWidget(),
   "简单上下刷新1": (_) => RefreshSimple1Widget(),
   "简单上下刷新2": (_) => RefreshSimple2Widget(),
   "实现控件圆角不同组合": (_) => ClipImageWidget(),
