@@ -3,6 +3,7 @@ import 'package:hy_flutter_simple/widget/all_widget.dart';
 
 Map<String, WidgetBuilder> routers = {
   "关于dialog": (_) => AboutListTileWidget(),
+  "Transform动画": (_) => TransformSimpleWidget(),
   "探索事件处理": (_) => FlutterTouchEventWidget(),
   "富文本": (_) => RichTextWidget(),
   "简单上下刷新1": (_) => RefreshSimple1Widget(),
