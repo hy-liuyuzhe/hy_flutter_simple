@@ -1,14 +1,18 @@
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hy_flutter_simple/widget/all_widget.dart';
 
 class AnimatedSwitcherWidget extends StatefulWidget {
   @override
-  _AnimatedSwitcherWidgetState3 createState() => _AnimatedSwitcherWidgetState3();
+  _AnimatedSwitcherWidgetState3 createState() =>
+      _AnimatedSwitcherWidgetState3();
 }
 
 class _AnimatedSwitcherWidgetState3 extends State<AnimatedSwitcherWidget>
     with SingleTickerProviderStateMixin {
   int _count = 0;
+  double opacityLevel = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +27,32 @@ class _AnimatedSwitcherWidgetState3 extends State<AnimatedSwitcherWidget>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              AnimatedOpacity(
+                opacity: opacityLevel,
+                duration: Duration(seconds: 3),
+                child: SizedBox(width: 100, height: 100, child: Image.asset(icon_love,fit: BoxFit.cover,)),
+              ),
+              RawMaterialButton(
+                padding: EdgeInsets.all(6),
+                onPressed: () {
+                  setState(() {
+                    opacityLevel = opacityLevel == 1.0 ? 0.0 : 1.0;
+                  });
+                },
+                fillColor: Colors.green,
+                child: Text(
+                  "超级简单实现渐变效果",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
                 transitionBuilder: (Widget child, Animation<double> animation) {
-                  var position = Tween(begin: Offset(1,0),end: Offset(0, 0)).animate(animation);
+                  var position = Tween(begin: Offset(1, 0), end: Offset(0, 0))
+                      .animate(animation);
                   return SlideTransitionY(
                     position: position,
                     child: child,
@@ -54,7 +80,6 @@ class _AnimatedSwitcherWidgetState3 extends State<AnimatedSwitcherWidget>
     );
   }
 }
-
 
 class _AnimatedSwitcherWidgetState2 extends State<AnimatedSwitcherWidget>
     with SingleTickerProviderStateMixin {
