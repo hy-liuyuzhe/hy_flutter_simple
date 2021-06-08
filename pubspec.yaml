@@ -31,7 +31,7 @@ dependencies:
   animated_text_kit: ^4.2.1
   fluttertoast: ^8.0.7
   route_animation_helper: ^1.0.0+5
-
+  pedantic: ^1.11.0
 
 dev_dependencies:
   flutter_test:

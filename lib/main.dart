@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          Text("收藏控件: ${routers.length} 个"),
+          Text('收藏控件: ${routers.length} 个'),
           Expanded(
             child: ListView.builder(
                 shrinkWrap: true,

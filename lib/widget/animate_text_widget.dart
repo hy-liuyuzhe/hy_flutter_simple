@@ -76,7 +76,7 @@ List<AnimatedTextExample> animatedTextExamples({required VoidCallback onTap}) {
   ];
 }
 
-combinationAnimatedTextExample(VoidCallback onTap) => AnimatedTextExample(
+AnimatedTextExample combinationAnimatedTextExample(VoidCallback onTap) => AnimatedTextExample(
     label: 'Combination',
     color: Colors.pink,
     child: AnimatedTextKit(

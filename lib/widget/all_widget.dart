@@ -14,3 +14,4 @@ export 'flutter_touch_event_widget.dart';
 export 'animated_switcher_widget.dart';
 export 'rich_text_widget.dart';
 export 'transform_simple_widget.dart';
+export 'drop/drop_select_page_widget.dart';

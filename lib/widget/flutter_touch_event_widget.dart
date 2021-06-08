@@ -15,9 +15,9 @@ class FlutterTouchEventState1 extends BaseStatefulState {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return doubleContainer();
+    // return doubleContainer();
     // return behavior();
-    // return onPanUpdate();
+    return onPanUpdate();
   }
 
   Stack onPanUpdate() {
@@ -27,7 +27,9 @@ class FlutterTouchEventState1 extends BaseStatefulState {
           left: left,
           top: top,
           child: GestureDetector(
+            // onVerticalDragUpdate: (DragUpdateDetails details){},设置这个会拦截下面vertical事件
             onPanUpdate: (DragUpdateDetails details) {
+              printVerticalPercentage(details);
               setState(() {
                 left += details.delta.dx;
                 top += details.delta.dy;
@@ -44,6 +46,12 @@ class FlutterTouchEventState1 extends BaseStatefulState {
         )
       ],
     );
+  }
+
+  void printVerticalPercentage(DragUpdateDetails details) {
+    var screenH = MediaQuery.of(context).size.height;
+    final percentage = details.globalPosition.dy / screenH * 100;
+    print('percentage= $percentage');
   }
 
   Listener behavior() {
