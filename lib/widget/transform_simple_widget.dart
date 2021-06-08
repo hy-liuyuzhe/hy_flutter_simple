@@ -111,8 +111,8 @@ class TransformSimpleState extends BaseStatefulState
             Animation<double> secondaryAnimation) {
           return dest;
         },
-        transitionDuration: Duration(seconds: 3),
-        reverseTransitionDuration: Duration(seconds: 3),
+        transitionDuration: Duration(seconds: 1),
+        reverseTransitionDuration: Duration(seconds: 1),
         transitionsBuilder: (context, animation, anotherAnimation, child) {
           animation = CurvedAnimation(curve: Curves.ease, parent: animation);
 
